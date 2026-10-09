@@ -1216,17 +1216,20 @@
                     const cleanDesc = `"${(t.description || '').replace(/"/g, '""')}"`;
                     const cleanLabel = `"${labelName.replace(/"/g, '""')}"`;
 
+                    // Adjust amount to be negative if it's an expense
+                    const signedAmount = t.type === 'expense' ? -Math.abs(t.amount) : Math.abs(t.amount);
+
                     const row = [
-                        t.id, dateStr, timeStr, cleanDesc, t.amount, t.type, cleanLabel,
+                        t.id, dateStr, timeStr, cleanDesc, signedAmount, t.type, cleanLabel,
                         t.label_id || '', t.owner || 'Mathias', t.is_savings ? 'TRUE' : 'FALSE', t.is_loan ? 'TRUE' : 'FALSE', t.created_at
                     ];
                     csvRows.push(row.join(","));
                 });
 
                 const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + csvRows.join("\n");
-                downloadFile(csvContent, `financeflow_transactions_${scope}_${timestamp}.csv`);
-
-            } else if (format === 'sql') {
+                downloadFile(csvContent, `ZaznamityWEB_${scope}_${timestamp}.csv`);
+    
+            } else if (format === 'sql') { 
                 if (!SQL) {
                     alert("sql.js library is still loading or unavailable. Please wait a moment and try again.");
                     return;
